@@ -170,20 +170,23 @@ class PriceDropNotifier
   end
 
   def check_ibox_price(body)
-    if body =~ /"special_price":(.*?),/
-      return $1.to_f
+    lowest_special_price = body.scan(/"special_price":(.*?),/).map(&:to_f).min
+    if lowest_special_price
+      return lowest_special_price
     end
 
-    if body =~ /"price":(.*?),/
-      return $1.to_f
+    lowest_price = body.scan(/"price":(.*?),/).map(&:to_f).min
+    if lowest_price
+      return lowest_price
     end
 
     nil
   end
 
   def check_digimap_price(body)
-    if body =~ /"amount":(.*?),/
-      return $1.to_f
+    lowest_price = body.scan(/"amount":(.*?),/).map(&:to_f).min
+    if lowest_price
+      return lowest_price
     end
 
     nil
